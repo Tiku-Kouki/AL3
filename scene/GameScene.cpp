@@ -1,15 +1,15 @@
 #include "GameScene.h"
 #include "TextureManager.h"
 #include <cassert>
+#include"AxisIndicator.h"
 
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
 
-
 	delete model_;
 	delete player_;
-	
+	delete debugCamera_;
 }
 
 void GameScene::Initialize() {
@@ -21,21 +21,41 @@ void GameScene::Initialize() {
 
 	model_ = Model::Create();
 
-	
 	viewProjection_.Initialize();
-	
 
 	player_ = new Player();
-	
 
 	player_->Initalize(model_, textureHandle_);
-	
+
+	debugCamera_ = new DebugCamera(1280, 720);
+
+	AxisIndicator::GetInstance()->SetVisible(true);
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
+
+
 }
 
 void GameScene::Update() {
 
-player_->Update();
+	player_->Update();
 
+#ifdef _DEBUG
+
+	if (input_->PushKey(DIK_SPACE)) {
+		isDebugCameraActive_ = true;
+	}
+
+#endif // DEBUG
+	if (isDebugCameraActive_ == true) {
+		debugCamera_->Update();
+		viewProjection_.matView = debugCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = debugCamera_->GetViewProjection().matProjection;
+
+		viewProjection_.TransferMatrix();
+	} else {
+
+		viewProjection_.UpdateMatrix();
+	}
 }
 
 void GameScene::Draw() {
@@ -66,8 +86,6 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw(viewProjection_);
-
-
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
