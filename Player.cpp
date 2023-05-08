@@ -67,6 +67,20 @@ void Player::Update() {
 
 }
 
+void Player::Rotate() {
+
+	const float kRotSpeed = 0.02f;
+
+	if (input_->PushKey(DIK_A)) {
+		0;
+	}
+	else if(input_->PushKey(DIK_D)) {
+		0;
+	}
+
+
+}
+
 void Player::Draw(ViewProjection &viewProjection) {
 
 model_->Draw(worldTransform_, viewProjection, textureHandle_);

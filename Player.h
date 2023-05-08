@@ -13,6 +13,8 @@ public:
 
 	void Update();
 
+	void Rotate();
+
 
 
 	void Draw(ViewProjection &viewProjection);
