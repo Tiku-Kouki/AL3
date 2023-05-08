@@ -1,15 +1,14 @@
 #include "Player.h"
+#include "ImGuiManager.h"
 #include "cassert"
-#include"ImGuiManager.h"
 
+void Player::Initalize(Model* model, uint32_t textureHandle) {
 
-void Player::Initalize(Model* model, uint32_t textureHandle) { 
-	
-	assert(model); 
+	assert(model);
 	model_ = model;
 	textureHandle_ = textureHandle;
 
-	worldTransform_.scale_ = {5.0f, 1.0f, 1.0f};
+	worldTransform_.scale_ = {2.0f, 2.0f, 2.0f};
 
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
@@ -18,8 +17,16 @@ void Player::Initalize(Model* model, uint32_t textureHandle) {
 	worldTransform_.Initialize();
 
 	input_ = Input::GetInstance();
+}
+void Player::Rotate() {
 
-	
+	const float kRotSpeed = 0.02f;
+
+	if (input_->PushKey(DIK_A)) {
+		worldTransform_.rotation_.y -= kRotSpeed;
+	} else if (input_->PushKey(DIK_D)) {
+		worldTransform_.rotation_.y += kRotSpeed;
+	}
 }
 
 void Player::Update() {
@@ -27,6 +34,8 @@ void Player::Update() {
 	Vector3 move = {0, 0, 0};
 
 	const float kCharacterSpeed = 0.2f;
+
+	Rotate();
 
 	if (input_->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
@@ -50,41 +59,43 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-
-
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	
+
 	worldTransform_.TransferMatrix();
+
+	Attack();
+
+	if (bullet_) {
+		bullet_->Update();
+	}
 
 	ImGui::Begin("du");
 	ImGui::Text(
 	    " x: %f,y: %f z: %f", worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z);
-	
+
 	ImGui::End();
-
-
 }
 
-void Player::Rotate() {
+void Player::Draw(ViewProjection& viewProjection) {
 
-	const float kRotSpeed = 0.02f;
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	if (input_->PushKey(DIK_A)) {
-		0;
-	}
-	else if(input_->PushKey(DIK_D)) {
-		0;
+	if (bullet_) {
+		bullet_->Draw(viewProjection);
 	}
 
-
 }
 
-void Player::Draw(ViewProjection &viewProjection) {
+void Player::Attack() {
 
-model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	if (input_->PushKey(DIK_SPACE)) {
 
+		PlayerBullet* newBullet = new PlayerBullet();
+
+		newBullet->Initialize(model_, worldTransform_.translation_);
+
+		bullet_ = newBullet;
+	}
 }
-
-

@@ -96,11 +96,11 @@ Matrix4x4 MakeRotateZMatrix(float theta) {
 	Matrix4x4 A;
 
 	A.m[0][0] = std::cos(theta);
-	A.m[0][1] = std::sin(theta);
+	A.m[0][1] = -std::sin(theta);
 	A.m[0][2] = 0.0f;
 	A.m[0][3] = 0.0f;
 
-	A.m[1][0] = -std::sin(theta);
+	A.m[1][0] = std::sin(theta);
 	A.m[1][1] = std::cos(theta);
 	A.m[1][2] = 0.0f;
 	A.m[1][3] = 0.0f;
