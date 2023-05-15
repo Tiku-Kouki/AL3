@@ -3,7 +3,7 @@
 
 
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position) { 
+void PlayerBullet::Initialize(Model* model, const Vector3& position,const Vector3& velocity) { 
 	
 	assert(model);
 
@@ -15,13 +15,23 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position) {
 
 	worldTransform_.Initialize(); 
 	
-
+	velocity_ = velocity;
 
 }
 
 void PlayerBullet::Update() {
 
 worldTransform_.UpdateMatrix();
+
+worldTransform_.translation_.x += velocity_.x;
+worldTransform_.translation_.y += velocity_.y;
+
+worldTransform_.translation_.z += velocity_.z;
+
+if (--deathTimer_ <= 0) {
+	isDead_ = true;
+}
+
 
 
 }
