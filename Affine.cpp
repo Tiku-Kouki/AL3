@@ -2,7 +2,7 @@
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 
-	Matrix4x4 A;
+	Matrix4x4 A = {};
 	A.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] +
 	            m1.m[0][3] * m2.m[3][0];
 	A.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] +
@@ -43,7 +43,7 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 }
 
 Matrix4x4 MakeRotateXMatrix(float theta) {
-	Matrix4x4 A;
+	Matrix4x4 A = {};
 
 	A.m[0][0] = 1.0f;
 	A.m[0][1] = 0.0f;
@@ -68,7 +68,7 @@ Matrix4x4 MakeRotateXMatrix(float theta) {
 	return A;
 }
 Matrix4x4 MakeRotateYMatrix(float theta) {
-	Matrix4x4 A;
+	Matrix4x4 A = {};
 
 	A.m[0][0] = std::cos(theta);
 	A.m[0][1] = 0.0f;
@@ -93,7 +93,7 @@ Matrix4x4 MakeRotateYMatrix(float theta) {
 	return A;
 }
 Matrix4x4 MakeRotateZMatrix(float theta) {
-	Matrix4x4 A;
+	Matrix4x4 A = {};
 
 	A.m[0][0] = std::cos(theta);
 	A.m[0][1] = -std::sin(theta);
@@ -131,7 +131,7 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, Vector3& translate) {
-	Matrix4x4 A;
+	Matrix4x4 A = {};
 
 	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rot.x);
 	Matrix4x4 rotateYMatrix = MakeRotateYMatrix(rot.y);

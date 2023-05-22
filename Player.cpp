@@ -82,6 +82,8 @@ void Player::Update() {
 	}
 	
 
+
+
 	ImGui::Begin("du");
 	ImGui::Text(
 	    " x: %f,y: %f z: %f", worldTransform_.translation_.x, worldTransform_.translation_.y,

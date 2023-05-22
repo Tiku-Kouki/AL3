@@ -10,6 +10,7 @@ GameScene::~GameScene() {
 	delete model_;
 	delete player_;
 	delete debugCamera_;
+	delete enemy_;
 }
 
 void GameScene::Initialize() {
@@ -18,6 +19,7 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	textureHandle_ = TextureManager::Load("mario.png");
+	textureHandle2_ = TextureManager::Load("tex1.png");
 
 	model_ = Model::Create();
 
@@ -32,12 +34,18 @@ void GameScene::Initialize() {
 	AxisIndicator::GetInstance()->SetVisible(true);
 	AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection_);
 
+	enemy_ = new Enemy();
+
+	enemy_->Initialize(model_, textureHandle2_);
+
 
 }
 
 void GameScene::Update() {
 
 	player_->Update();
+
+	enemy_->Update();
 
 #ifdef _DEBUG
 
@@ -86,6 +94,8 @@ void GameScene::Draw() {
 	/// </summary>
 
 	player_->Draw(viewProjection_);
+	enemy_->Draw(viewProjection_);
+
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
