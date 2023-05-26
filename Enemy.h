@@ -5,6 +5,11 @@
 #include "Affine.h"
 #include <list>
 
+enum class Phase {
+	Approach,//接近する
+	Leave,//離脱する
+};
+
 class Enemy {
 
 public:
@@ -33,5 +38,7 @@ private:
 	uint32_t textureHandle_ = 0u;
 
 	Input* input_ = nullptr;
+
+	Phase phase_ = Phase::Approach;
 
 };
