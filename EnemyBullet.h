@@ -1,25 +1,14 @@
 ﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
-#include "Input.h"
-#include "Affine.h"
-#include <list>
-#include"EnemyBullet.h"
 
-
-enum class Phase {
-	Approach,//接近する
-	Leave,//離脱する
-};
-
-class Enemy {
-
+class EnemyBullet {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
 	/// <param name="model">モデル</param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -30,18 +19,7 @@ public:
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw(const ViewProjection& viewProjection);
 
-
-	~Enemy();
-
-	/// <summary>
-	/// 弾発射
-	/// </summary>
-	void Fire();
-
-	static const int kFireInterval = 60;
-
-	void phaseReset();
-
+	bool IsDead() const { return isDead_; }
 
 private:
 	WorldTransform worldTransform_;
@@ -50,12 +28,11 @@ private:
 
 	uint32_t textureHandle_ = 0u;
 
-	Input* input_ = nullptr;
-
-	Phase phase_ = Phase::Approach;
-
-	std::list<EnemyBullet*> bullets_;
-
-	int32_t fireTimer = 0;
-
+	Vector3 velocity_{0, 0, 0};
+	// 寿命<frm>
+	static const int32_t kLifeTime = 60 * 5;
+	// デスタイマー
+	int32_t deathTimer_ = kLifeTime;
+	// デスフラグ
+	bool isDead_ = false;
 };

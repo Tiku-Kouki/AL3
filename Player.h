@@ -19,6 +19,8 @@ public:
 
 	~Player();
 
+	void Attack();
+
 private:
 	WorldTransform worldTransform_;
 
@@ -30,5 +32,5 @@ private:
 
 	std::list <PlayerBullet*> bullets_;
 
-	void Attack();
+	
 };
