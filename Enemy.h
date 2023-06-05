@@ -30,6 +30,9 @@ public:
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw(const ViewProjection& viewProjection);
 
+	void Approach_(); // 接近する
+	void Leave_();
+
 
 	~Enemy();
 
@@ -53,6 +56,8 @@ private:
 	Input* input_ = nullptr;
 
 	Phase phase_ = Phase::Approach;
+
+	static void (Enemy::*Phase_[])();
 
 	std::list<EnemyBullet*> bullets_;
 
