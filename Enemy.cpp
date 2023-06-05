@@ -33,7 +33,7 @@ void (Enemy::*Enemy::Phase_[])() = {
 
 void Enemy::Update() {
 	
-	Vector3 move = {0.0f, 0.0f, 0.2f};
+	
 
 	
 	worldTransform_.UpdateMatrix();
@@ -69,7 +69,7 @@ void Enemy::Draw(const ViewProjection& viewProjection) {
 }
 
 void Enemy::Approach_() {
-	Vector3 move = {0.0f, 0.0f, 0.3f};
+	
 
 	worldTransform_.translation_.z -= move.z;
 	if (worldTransform_.translation_.z < 0.0f) {
@@ -79,7 +79,9 @@ void Enemy::Approach_() {
 }
 
 void Enemy::Leave_() {
-	Vector3 move = {0.1f, 0.1f, 0.3f};
+	
+	 move = {0.0f, 0.1f, 0.2f};
+
 
 	worldTransform_.translation_.x -= move.x;
 	worldTransform_.translation_.y += move.y;

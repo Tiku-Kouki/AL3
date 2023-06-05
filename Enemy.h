@@ -63,4 +63,6 @@ private:
 
 	int32_t fireTimer = 0;
 
+	Vector3 move = {0.0f, 0.0f, 0.2f};
+
 };
