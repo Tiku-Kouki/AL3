@@ -38,6 +38,7 @@ void GameScene::Initialize() {
 
 	enemy_->Initialize(model_, textureHandle2_);
 
+	enemy_->SetPlayer(player_);
 
 }
 

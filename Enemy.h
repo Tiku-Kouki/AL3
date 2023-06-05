@@ -5,6 +5,7 @@
 #include "Affine.h"
 #include <list>
 #include"EnemyBullet.h"
+class Player;
 
 
 enum class Phase {
@@ -45,6 +46,9 @@ public:
 
 	void phaseReset();
 
+	void SetPlayer(Player* player) { player_ = player; }
+
+	Vector3 GetWorldPosition();
 
 private:
 	WorldTransform worldTransform_;
@@ -64,5 +68,7 @@ private:
 	int32_t fireTimer = 0;
 
 	Vector3 move = {0.0f, 0.0f, 0.2f};
+
+	Player* player_ = nullptr;
 
 };
