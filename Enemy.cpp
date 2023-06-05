@@ -32,7 +32,7 @@ void Enemy::Update() {
 	
 	worldTransform_.UpdateMatrix();
 
-	switch (phase_) {
+	static_cast<size_t> (phase_) {
 	case Phase::Approach:
 		
 		
