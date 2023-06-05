@@ -6,8 +6,8 @@
 #include <list>
 
 enum class Phase {
-	Approach,//接近する
-	Leave,//離脱する
+	Approach_,//接近する
+	Leave_,//離脱する
 };
 
 class Enemy {
@@ -28,6 +28,11 @@ public:
 	/// <param name="viewProjection">ビュープロジェクション</param>
 	void Draw(const ViewProjection& viewProjection);
 
+
+	void Approach(); // 接近する
+	void Leave();
+
+
 	
 
 private:
@@ -39,6 +44,7 @@ private:
 
 	Input* input_ = nullptr;
 
-	Phase phase_ = Phase::Approach;
+	Phase phase_ = Phase::Approach_;
 
+	static void (Enemy::*Phase_[])();
 };

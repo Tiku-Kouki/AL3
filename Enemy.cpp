@@ -1,4 +1,4 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "cassert"
 #include "ImGuiManager.h"
 
@@ -24,6 +24,11 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	
 
 }
+void (Enemy::*Enemy::Phase_[])() ={
+        &Enemy::Approach, // 接近する
+        &Enemy::Leave,      // 離脱する
+
+};
 
 void Enemy::Update() {
 	
@@ -32,25 +37,13 @@ void Enemy::Update() {
 	
 	worldTransform_.UpdateMatrix();
 
-	static_cast<size_t> (phase_) {
-	case Phase::Approach:
-		
-		
-		worldTransform_.translation_.z -= move.z;
-		if (worldTransform_.translation_.z < 0.0f) {
-			phase_ = Phase::Leave;
-		}
+	
 
-		break;
-	case Phase::Leave:
 
-		worldTransform_.translation_.x -= move.x;
-		worldTransform_.translation_.y += move.y;
-		worldTransform_.translation_.z -= move.z;
-		
+	(this->*Phase_[static_cast<size_t>(phase_)])();
 
-		break;
-	}
+
+	
 
 
 	ImGui::Begin("en");
@@ -65,4 +58,23 @@ void Enemy::Update() {
 void Enemy::Draw(const ViewProjection& viewProjection) {
 	
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+}
+
+void Enemy::Approach() {
+	Vector3 move = {0.0f, 0.0f, 0.3f};
+
+	worldTransform_.translation_.z -= move.z;
+	if (worldTransform_.translation_.z < 0.0f) {
+		phase_ = Phase::Leave_;
+	}
+
+}
+
+void Enemy::Leave() { 
+	Vector3 move = {0.1f, 0.1f, 0.3f};
+
+	worldTransform_.translation_.x -= move.x;
+	worldTransform_.translation_.y += move.y;
+	worldTransform_.translation_.z -= move.z;
+
 }
