@@ -80,7 +80,7 @@ void Enemy::Approach_() {
 
 void Enemy::Leave_() {
 	
-	 move = {0.0f, 0.1f, 0.2f};
+	 move = {0.0f, 0.0f, 0.2f};
 
 
 	worldTransform_.translation_.x -= move.x;
