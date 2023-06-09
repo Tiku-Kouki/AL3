@@ -88,7 +88,9 @@ void Player::Update() {
 	ImGui::Text(
 	    " x: %f,y: %f z: %f", worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z);
-
+	ImGui::DragFloat3("Translation", &worldTransform_.translation_.x, 0.01f);
+	ImGui::DragFloat3("Rotation", &worldTransform_.rotation_.x, 0.01f);
+	
 	ImGui::End();
 }
 

@@ -1,4 +1,4 @@
-#include "Affine.h"
+﻿#include "Affine.h"
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 
@@ -128,7 +128,30 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	return result;
 }
 
+float Dot(const Vector3& v1, const Vector3& v2) {
+	float A;
 
+	A = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+
+	return A;
+}
+//  ルートの計算に使う->sqrtf()
+// ノルム(長さ)
+float Length(const Vector3& v) {
+	float A;
+
+	A = sqrtf(Dot(v, v));
+
+	return A;
+}
+
+Vector3 Normalize(const Vector3& v) {
+	float length = Length(v);
+
+	assert(length != 0.0f);
+
+	return {v.x / length, v.y / length, v.z / length};
+}
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, Vector3& translate) {
 	Matrix4x4 A = {};

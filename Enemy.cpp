@@ -1,7 +1,7 @@
 ﻿#include "Enemy.h"
 #include "cassert"
 #include "ImGuiManager.h"
-
+#include "Player.h"
 
 void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
@@ -52,7 +52,7 @@ void Enemy::Update() {
 	ImGui::Text(
 	    " x: %f,y: %f z: %f", worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z);
-
+	ImGui::DragFloat3("EnemyPos", &worldTransform_.translation_.x, 0.01f);
 	ImGui::End();
 
 }
@@ -103,11 +103,18 @@ void Enemy::Fire() {
 
 	assert(player_);	
 
-	const float kBulletSpeed = 1.0f;
+	const float kBulletSpeed = 0.5f;
 
+	Vector3 playerWorld = player_->GetWorldPosition();
+	Vector3 enemyWorld = GetWorldPosition();
 
+	Vector3 difVector = {
+	    playerWorld.x - enemyWorld.x, playerWorld.y - enemyWorld.y, playerWorld.z - enemyWorld.z};
 
-	Vector3 velocity(0, 0, kBulletSpeed);
+	Vector3 difVectorN = Normalize(difVector);
+
+	Vector3 velocity(
+	    difVectorN.x * kBulletSpeed, difVectorN.y * kBulletSpeed, difVectorN.z * kBulletSpeed);
 
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
