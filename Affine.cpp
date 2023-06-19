@@ -127,7 +127,7 @@ Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m) {
 
 	return result;
 }
-
+// 内積
 float Dot(const Vector3& v1, const Vector3& v2) {
 	float A;
 

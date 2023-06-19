@@ -33,7 +33,15 @@ void (Enemy::*Enemy::Phase_[])() = {
 
 void Enemy::Update() {
 	
-	
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](EnemyBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+
+			return true;
+		}
+		return false;
+	});
 
 	
 	worldTransform_.UpdateMatrix();
@@ -153,3 +161,5 @@ Vector3 Enemy::GetWorldPosition() {
 
 	return worldPos;
 }
+
+void Enemy::OnColision() {}
