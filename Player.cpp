@@ -2,7 +2,7 @@
 #include "ImGuiManager.h"
 #include "cassert"
 
-void Player::Initalize(Model* model, uint32_t textureHandle) {
+void Player::Initalize(Model* model, uint32_t textureHandle, Vector3 playerPosition) {
 
 	assert(model);
 	model_ = model;
@@ -12,7 +12,7 @@ void Player::Initalize(Model* model, uint32_t textureHandle) {
 
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
-	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.translation_ = playerPosition;
 
 	worldTransform_.Initialize();
 
@@ -70,10 +70,7 @@ void Player::Update() {
 	worldTransform_.translation_.y = max(worldTransform_.translation_.y, -kMoveLimitY);
 	worldTransform_.translation_.y = min(worldTransform_.translation_.y, +kMoveLimitY);
 
-	worldTransform_.matWorld_ = MakeAffineMatrix(
-	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	worldTransform_.TransferMatrix();
+	worldTransform_.UpdateMatrix();
 
 	Attack();
 
@@ -129,11 +126,13 @@ void Player::Attack() {
 		const float kBulletSpeed = 1.0f;
 	Vector3 velocity(0, 0, kBulletSpeed);
 
+	Vector3 playerWorld = GetWorldPosition();
+
 	velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		PlayerBullet* newBullet = new PlayerBullet();
 
-		newBullet->Initialize(model_, worldTransform_.translation_,velocity);
+		newBullet->Initialize(model_, playerWorld, velocity);
 
 		bullets_.push_back(newBullet);
 	}
@@ -153,4 +152,10 @@ return worldPos;
 
 }
 
-void Player::OnColision() {}
+void Player::OnColision() {
+}
+
+void Player::SetParent(const WorldTransform* parent) 
+{ worldTransform_.parent_ = parent;
+
+}

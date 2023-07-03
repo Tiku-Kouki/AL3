@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Affine.h"
 #include "Input.h"
 #include "Model.h"
@@ -9,7 +9,7 @@
 
 class Player {
 public:
-	void Initalize(Model* model, uint32_t textureHandle);
+	void Initalize(Model* model, uint32_t textureHandle,Vector3 playerPosition);
 
 	void Update();
 
@@ -25,6 +25,15 @@ public:
 
 	void OnColision();
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
+
+
+
+	/// <summary>
+	/// 親となるワールドトランスフォームをセット
+	/// </summary>
+	/// <param name="parent">親となるワールドトランスフォーム</param>
+	void SetParent(const WorldTransform* parent);
+
 
 private:
 	WorldTransform worldTransform_;

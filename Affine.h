@@ -16,3 +16,5 @@ Vector3 Normalize(const Vector3& v);
 
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rot, Vector3& translate);
+
+Matrix4x4 Inverse(const Matrix4x4& m);

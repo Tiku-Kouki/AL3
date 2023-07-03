@@ -3,6 +3,7 @@
 #include <cassert>
 #include"AxisIndicator.h"
 #include<math.h>
+#include "ImGuiManager.h"
 
 GameScene::GameScene() {}
 
@@ -13,6 +14,8 @@ GameScene::~GameScene() {
 	delete debugCamera_;
 	delete enemy_;
 	delete modelSkydome_;
+	delete railCamera_;
+
 }
 
 void GameScene::Initialize() {
@@ -26,10 +29,17 @@ void GameScene::Initialize() {
 	model_ = Model::Create();
 
 	viewProjection_.Initialize();
-
+	
+	railCamera_ = new RailCamera();
+	railCamera_->Initalize();
+	
 	player_ = new Player();
 
-	player_->Initalize(model_, textureHandle_);
+	Vector3 playerPosition(0, 0, 20.0f);
+	player_->SetParent(&railCamera_->GetWorldTransform());
+	player_->Initalize(model_, textureHandle_,playerPosition);
+
+	
 
 	debugCamera_ = new DebugCamera(1280, 720);
 
@@ -42,27 +52,22 @@ void GameScene::Initialize() {
 
 	enemy_->SetPlayer(player_);
 
-	skydome_ = new Skydome;
+	skydome_ = new Skydome();
 	
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	
 	skydome_->Initialize(modelSkydome_);
+
+	
 }
 
 void GameScene::Update() {
 
-	player_->Update();
-
-	enemy_->Update();
-
-	skydome_->Update();
-
-	CheckAllCollisions();
 #ifdef _DEBUG
 
-	if (input_->PushKey(DIK_SPACE)) {
-		isDebugCameraActive_ = true;
-	}
+	/*if (input_->PushKey(DIK_SPACE)) {
+	    isDebugCameraActive_ = true;
+	}*/
 
 #endif // DEBUG
 	if (isDebugCameraActive_ == true) {
@@ -72,9 +77,29 @@ void GameScene::Update() {
 
 		viewProjection_.TransferMatrix();
 	} else {
-
-		viewProjection_.UpdateMatrix();
+		railCamera_->Update();
+		viewProjection_.matView = railCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = railCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+		// viewProjection_.UpdateMatrix();
 	}
+	
+	player_->Update();
+
+	enemy_->Update();
+
+	skydome_->Update();
+
+	CheckAllCollisions();
+
+	/*ImGui::Begin("camera");
+	ImGui::DragFloat3("Translation", &viewProjection_.translation_.x, 0.01f);
+	ImGui::DragFloat3("Rotation", &viewProjection_.rotation_.x, 0.01f);
+
+	ImGui::End();*/
+
+
+
 }
 
 void GameScene::CheckAllCollisions() 
