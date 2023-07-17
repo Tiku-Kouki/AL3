@@ -2,8 +2,9 @@
 #include "cassert"
 #include "ImGuiManager.h"
 #include "Player.h"
+#include"GameScene.h"
 
-void Enemy::Initialize(Model* model, uint32_t textureHandle) {
+void Enemy::Initialize(Model* model, uint32_t textureHandle, Vector3 enemyPosition) {
 	assert(model);
 
 	model_ = model;
@@ -19,7 +20,7 @@ void Enemy::Initialize(Model* model, uint32_t textureHandle) {
 
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
-	worldTransform_.translation_ = {5.0f,0.0f,40.0f};
+	worldTransform_.translation_ = enemyPosition;
 
 	
 	
@@ -33,24 +34,12 @@ void (Enemy::*Enemy::Phase_[])() = {
 
 void Enemy::Update() {
 	
-	// デスフラグの立った弾を削除
-	bullets_.remove_if([](EnemyBullet* bullet) {
-		if (bullet->IsDead()) {
-			delete bullet;
-
-			return true;
-		}
-		return false;
-	});
-
+	
 	
 	worldTransform_.UpdateMatrix();
 
 	
 	phaseReset();
-	for (EnemyBullet* bullet : bullets_) {
-		bullet->Update();
-	}
 	
 
 	(this->*Phase_[static_cast<size_t>(phase_)])();
@@ -69,10 +58,7 @@ void Enemy::Draw(const ViewProjection& viewProjection) {
 	
 	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 
-	for (EnemyBullet* bullet : bullets_) {
-
-		bullet->Draw(viewProjection);
-	}
+	
 
 }
 
@@ -135,8 +121,10 @@ void Enemy::Fire() {
 
 	newBullet->Initialize(model_, worldTransform_.translation_, velocity);
 
-	bullets_.push_back(newBullet);
-
+	
+	
+	gameScene_->AddEnemyBullet(newBullet);
+ 
 
 }
 
@@ -162,4 +150,7 @@ Vector3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 
-void Enemy::OnColision() {}
+void Enemy::OnColision() { 
+	isDead_ = true;
+
+}

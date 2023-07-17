@@ -6,7 +6,7 @@
 #include <list>
 #include"EnemyBullet.h"
 class Player;
-
+class GameScene;
 
 enum class Phase {
 	Approach,//接近する
@@ -20,7 +20,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="model">モデル</param>
-	void Initialize(Model* model, uint32_t textureHandle);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 enemyPosition);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -52,8 +52,13 @@ public:
 
 	void OnColision();
 
+	
+
 	const std::list<EnemyBullet*>& GetBullets() const { return bullets_; }
 
+	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
+
+	bool IsDead() const { return isDead_; }
 
 private:
 	WorldTransform worldTransform_;
@@ -76,6 +81,9 @@ private:
 
 	Player* player_ = nullptr;
 
-	
+	GameScene* gameScene_ = nullptr;
+
+	// デスフラグ
+	bool isDead_ = false;
 
 };

@@ -16,7 +16,7 @@ void RailCamera::Initalize() {
 void RailCamera::Update() {
 
 	worldTransform_.translation_.z -= 0.01f;
-	worldTransform_.rotation_.y += 0.01f;
+	//worldTransform_.rotation_.y += 0.01f;
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 	    worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
