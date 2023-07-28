@@ -42,6 +42,16 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return A;
 }
 
+Vector3 Multiply(float m1, const Vector3& m2) {
+
+	Vector3 A = {};
+	A.x = m2.x * m1;
+	A.y = m2.y * m1;
+	A.z = m2.z * m1;
+
+	return A;
+}
+
 Matrix4x4 MakeRotateXMatrix(float theta) {
 	Matrix4x4 A = {};
 
@@ -289,6 +299,177 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 	             m.m[0][2] * m.m[1][0] * m.m[2][1] - m.m[0][2] * m.m[1][1] * m.m[2][0] -
 	             m.m[0][1] * m.m[1][0] * m.m[2][2] - m.m[0][0] * m.m[1][2] * m.m[2][1]) *
 	            determinantRecp;
+
+	return A;
+}
+
+Matrix4x4 MakePerspectiveFoveMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
+
+	Matrix4x4 A = {};
+
+	A.m[0][0] = (1.0f / aspectRatio) * (1 / (tanf(fovY / 2)));
+	A.m[0][1] = 0.0f;
+	A.m[0][2] = 0.0f;
+	A.m[0][3] = 0.0f;
+
+	A.m[1][0] = 0.0f;
+	A.m[1][1] = 1 / (tanf(fovY / 2));
+	A.m[1][2] = 0.0f;
+	A.m[1][3] = 0.0f;
+
+	A.m[2][0] = 0.0f;
+	A.m[2][1] = 0.0f;
+	A.m[2][2] = farClip / (farClip - nearClip);
+	A.m[2][3] = 1.0f;
+
+	A.m[3][0] = 0.0f;
+	A.m[3][1] = 0.0f;
+	A.m[3][2] = -(nearClip * farClip) / (farClip - nearClip);
+	A.m[3][3] = 0.0f;
+
+	return A;
+}
+Matrix4x4 MakeOrthographicMatrix(
+    float left, float top, float right, float bottom, float nearClip, float farClip) {
+
+	Matrix4x4 A = {};
+
+	A.m[0][0] = 2.0f / (right - left);
+	A.m[0][1] = 0.0f;
+	A.m[0][2] = 0.0f;
+	A.m[0][3] = 0.0f;
+
+	A.m[1][0] = 0.0f;
+	A.m[1][1] = 2.0f / (top - bottom);
+	A.m[1][2] = 0.0f;
+	A.m[1][3] = 0.0f;
+
+	A.m[2][0] = 0.0f;
+	A.m[2][1] = 0.0f;
+	A.m[2][2] = 1.0f / (farClip - nearClip);
+	A.m[2][3] = 0.0f;
+
+	A.m[3][0] = (left + right) / (left - right);
+	A.m[3][1] = (top + bottom) / (bottom - top);
+	A.m[3][2] = nearClip / (nearClip - farClip);
+	A.m[3][3] = 1.0f;
+
+	return A;
+}
+Matrix4x4 MakeViewportMatrix(
+    float left, float top, float width, float height, float minDepth, float maxDepth) {
+
+	Matrix4x4 A = {};
+
+	A.m[0][0] = width / 2;
+	A.m[0][1] = 0.0f;
+	A.m[0][2] = 0.0f;
+	A.m[0][3] = 0.0f;
+
+	A.m[1][0] = 0.0f;
+	A.m[1][1] = -(height / 2);
+	A.m[1][2] = 0.0f;
+	A.m[1][3] = 0.0f;
+
+	A.m[2][0] = 0.0f;
+	A.m[2][1] = 0.0f;
+	A.m[2][2] = maxDepth - minDepth;
+	A.m[2][3] = 0.0f;
+
+	A.m[3][0] = left + (width / 2);
+	A.m[3][1] = top + (height / 2);
+	A.m[3][2] = minDepth;
+	A.m[3][3] = 1.0f;
+	return A;
+}
+
+Matrix4x4 Transpose(const Matrix4x4& m) {
+	Matrix4x4 A = {};
+	A.m[0][0] = m.m[0][0];
+	A.m[0][1] = m.m[1][0];
+	A.m[0][2] = m.m[2][0];
+	A.m[0][3] = m.m[3][0];
+	A.m[1][0] = m.m[0][1];
+	A.m[1][1] = m.m[1][1];
+	A.m[1][2] = m.m[2][1];
+	A.m[1][3] = m.m[3][1];
+	A.m[2][0] = m.m[0][2];
+	A.m[2][1] = m.m[1][2];
+	A.m[2][2] = m.m[2][2];
+	A.m[2][3] = m.m[3][2];
+	A.m[3][0] = m.m[0][3];
+	A.m[3][1] = m.m[1][3];
+	A.m[3][2] = m.m[2][3];
+	A.m[3][3] = m.m[3][3];
+
+	return A;
+}
+
+Vector3 Transform(Vector3 vector, Matrix4x4 matrix) {
+	Vector3 result = {};
+
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[1][0] + vector.z * matrix.m[2][0] + matrix.m[3][0];
+	result.y = vector.x * matrix.m[0][1] + vector.y * matrix.m[1][1] + vector.z * matrix.m[2][1] + matrix.m[3][1];
+	result.z = vector.x * matrix.m[0][2] + vector.y * matrix.m[1][2] + vector.z * matrix.m[2][2] + matrix.m[3][2];
+	 float w = vector.x * matrix.m[0][3] + vector.y * matrix.m[1][3] + vector.z * matrix.m[2][3] + matrix.m[3][3];
+	assert(w != 0.0f);
+	result.x /= w;
+	result.y /= w;
+	result.z /= w;
+
+	return result;
+}
+
+Vector3 MultiplyT(Vector3 vector, Matrix4x4 matrix) {
+	Vector3 result = {};
+
+	result.x = vector.x * matrix.m[0][0] + vector.y * matrix.m[0][1] + vector.z * matrix.m[0][2] + matrix.m[0][3];
+	result.y = vector.x * matrix.m[1][0] + vector.y * matrix.m[1][1] + vector.z * matrix.m[1][2] + matrix.m[1][3];
+	result.z = vector.x * matrix.m[2][0] + vector.y * matrix.m[2][1] + vector.z * matrix.m[2][2] + matrix.m[2][3];
+
+	return result;
+}
+
+Matrix4x4 Subtract(const Matrix4x4& m1, const Matrix4x4& m2) {
+
+	Matrix4x4 A = {};
+	A.m[0][0] = m1.m[0][0] - m2.m[0][0];
+	A.m[0][1] = m1.m[0][1] - m2.m[0][1];
+	A.m[0][2] = m1.m[0][2] - m2.m[0][2];
+	A.m[0][3] = m1.m[0][3] - m2.m[0][3];
+	A.m[1][0] = m1.m[1][0] - m2.m[1][0];
+	A.m[1][1] = m1.m[1][1] - m2.m[1][1];
+	A.m[1][2] = m1.m[1][2] - m2.m[1][2];
+	A.m[1][3] = m1.m[1][3] - m2.m[1][3];
+	A.m[2][0] = m1.m[2][0] - m2.m[2][0];
+	A.m[2][1] = m1.m[2][1] - m2.m[2][1];
+	A.m[2][2] = m1.m[2][2] - m2.m[2][2];
+	A.m[2][3] = m1.m[2][3] - m2.m[2][3];
+	A.m[3][0] = m1.m[3][0] - m2.m[3][0];
+	A.m[3][1] = m1.m[3][1] - m2.m[3][1];
+	A.m[3][2] = m1.m[3][2] - m2.m[3][2];
+	A.m[3][3] = m1.m[3][3] - m2.m[3][3];
+
+	return A;
+}
+
+// 加算
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+	Vector3 A = {};
+
+	A.x = v1.x + v2.x;
+	A.y = v1.y + v2.y;
+	A.z = v1.z + v2.z;
+
+	return A;
+}
+// 減算
+Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
+	Vector3 A = {};
+
+	A.x = v1.x - v2.x;
+	A.y = v1.y - v2.y;
+	A.z = v1.z - v2.z;
 
 	return A;
 }

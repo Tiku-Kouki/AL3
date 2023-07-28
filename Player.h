@@ -5,13 +5,13 @@
 #include "PlayerBullet.h"
 #include "WorldTransform.h"
 #include <list>
-
+#include"Sprite.h"
 
 class Player {
 public:
 	void Initalize(Model* model, uint32_t textureHandle,Vector3 playerPosition);
 
-	void Update();
+	void Update(ViewProjection& viewProjection);
 
 	void Rotate();
 
@@ -34,6 +34,13 @@ public:
 	/// <param name="parent">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
 
+	/// <summary>
+	/// UI描画
+	/// </summary>
+	void DrawUI();
+
+
+
 
 private:
 	WorldTransform worldTransform_;
@@ -46,5 +53,12 @@ private:
 
 	std::list <PlayerBullet*> bullets_;
 
-	
+	//3Dレティクル用ワールドトランスフォーム
+	WorldTransform worldTransform3DReticle_; 
+
+	// 2Dレティクル用スプライト
+	Sprite* sprite2DReticle_ = nullptr;
+
+
+
 };

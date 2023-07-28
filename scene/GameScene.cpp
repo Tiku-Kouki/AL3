@@ -45,6 +45,10 @@ void GameScene::Initialize() {
 	railCamera_ = new RailCamera();
 	railCamera_->Initalize();
 
+	//レティクル用テクスチャ
+	TextureManager::Load("2DReticle.png");
+
+
 	player_ = new Player();
 
 	Vector3 playerPosition(0, 0, 20.0f);
@@ -116,7 +120,7 @@ void GameScene::Update() {
 		// viewProjection_.UpdateMatrix();
 	}
 
-	player_->Update();
+	player_->Update(viewProjection_);
 
 	
 	UpdataEnemyPopCommands();
@@ -279,6 +283,9 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
+	 
+	player_->DrawUI();
+	
 	/// </summary>
 
 	// スプライト描画後処理
