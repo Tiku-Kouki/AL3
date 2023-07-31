@@ -26,7 +26,7 @@ public:
 	void OnColision();
 	const std::list<PlayerBullet*>& GetBullets() const { return bullets_; }
 
-
+	
 
 	/// <summary>
 	/// 親となるワールドトランスフォームをセット
@@ -40,6 +40,7 @@ public:
 	void DrawUI();
 
 
+	void GetmMouse(ViewProjection& viewProjection);
 
 
 private:

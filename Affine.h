@@ -44,6 +44,8 @@ Matrix4x4 Subtract(const Matrix4x4& m1, const Matrix4x4& m2);
 // 減算
 Vector3 Subtract(const Vector3& v1, const Vector3& v2);
 
+Vector3 Add(const Vector3& v1, float v2);
+
 
 Matrix4x4 MakePerspectiveFoveMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 Matrix4x4 MakeOrthographicMatrix(
