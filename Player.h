@@ -42,6 +42,8 @@ public:
 
 	void GetmMouse(ViewProjection& viewProjection);
 
+	void GetGamePad(ViewProjection& viewProjection);
+
 
 private:
 	WorldTransform worldTransform_;
