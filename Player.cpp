@@ -9,7 +9,7 @@ void Player::Initalize(Model* model, uint32_t textureHandle) {
 	model_ = model;
 	textureHandle_ = textureHandle;
 
-	worldTransform_.scale_ = {5.0f, 1.0f, 1.0f};
+	worldTransform_.scale_ = {1.0f, 1.0f, 1.0f};
 
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
